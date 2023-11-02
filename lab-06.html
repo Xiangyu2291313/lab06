@@ -371,7 +371,42 @@ library(ggplot2)</code></pre>
 </div>
 <div id="exercise-1" class="section level2">
 <h2>Exercise 1</h2>
-<pre class="r"><code># Do some preliminary investigations &amp; cleaning</code></pre>
+<pre class="r"><code># Do some preliminary investigations &amp; cleaning
+diamonds %&gt;%
+  filter(depth_pct == 0) %&gt;%
+  count()</code></pre>
+<pre><code>## # A tibble: 1 × 1
+##       n
+##   &lt;int&gt;
+## 1     0</code></pre>
+<pre class="r"><code>diamonds %&gt;%
+  filter(length_mm == 0) %&gt;%
+  count()</code></pre>
+<pre><code>## # A tibble: 1 × 1
+##       n
+##   &lt;int&gt;
+## 1     8</code></pre>
+<pre class="r"><code>diamonds %&gt;%
+  filter(width_mm == 0) %&gt;%
+  count()</code></pre>
+<pre><code>## # A tibble: 1 × 1
+##       n
+##   &lt;int&gt;
+## 1     7</code></pre>
+<pre class="r"><code>diamonds %&gt;%
+  filter(depth_mm == 0) %&gt;%
+  count()</code></pre>
+<pre><code>## # A tibble: 1 × 1
+##       n
+##   &lt;int&gt;
+## 1    20</code></pre>
+<pre class="r"><code>diamonds %&gt;%
+  filter(table_pct == 0) %&gt;%
+  count()</code></pre>
+<pre><code>## # A tibble: 1 × 1
+##       n
+##   &lt;int&gt;
+## 1     0</code></pre>
 </div>
 <div id="exercise-2" class="section level2">
 <h2>Exercise 2</h2>
@@ -379,14 +414,31 @@ library(ggplot2)</code></pre>
   mutate(table_mm = table_pct * width_mm / 100)
 
 # Overall table_mm arithmetic mean?
-
-
-
-
-
-
-# table_mm arithmetic mean within each clarity category</code></pre>
-<p><em>Add your comment here</em></p>
+mean_table_mm &lt;- diamonds %&gt;%
+  summarise(mean(table_mm)) %&gt;%
+  print()</code></pre>
+<pre><code>## # A tibble: 1 × 1
+##   `mean(table_mm)`
+##              &lt;dbl&gt;
+## 1             3.30</code></pre>
+<pre class="r"><code># table_mm arithmetic mean within each clarity category
+mean_ec_table_mm &lt;- diamonds %&gt;%
+  group_by(clarity) %&gt;%
+  summarise(mean(table_mm)) %&gt;%
+  print()</code></pre>
+<pre><code>## # A tibble: 8 × 2
+##   clarity `mean(table_mm)`
+##   &lt;ord&gt;              &lt;dbl&gt;
+## 1 I1                  3.91
+## 2 SI2                 3.71
+## 3 SI1                 3.40
+## 4 VS2                 3.25
+## 5 VS1                 3.20
+## 6 VVS2                2.98
+## 7 VVS1                2.83
+## 8 IF                  2.82</code></pre>
+<p><em>For each clarity with numbered 2, the average table length tends
+to be higher.</em></p>
 </div>
 <div id="exercise-3" class="section level2">
 <h2>Exercise 3</h2>
@@ -395,26 +447,41 @@ code</em></p>
 </div>
 <div id="exercise-4" class="section level2">
 <h2>Exercise 4</h2>
-<pre class="r"><code># Write gmean() command</code></pre>
+<pre class="r"><code># Write gmean() command
+gmean &lt;- function(x){
+  sum_lnx &lt;- sum(log(x))
+  x_g &lt;- exp(sum_lnx/length(x))
+  return(x_g)
+}</code></pre>
 </div>
 <div id="exercise-5" class="section level2">
 <h2>Exercise 5</h2>
-<pre class="r"><code>test_data &lt;- list(
-  test1 = c(2.1, 3.8, 4.2),
-  test2 = c(1, 10, 100, 1000),
-  test3 = c(0, 1, 4),
-  test4 = c(0.38,  0.94, -1.56),
-  test5 = c(TRUE, TRUE),
-  test6 = c(&quot;6&quot;, &quot;7&quot;, &quot;8&quot;)
-)
+<pre class="r"><code>#test_data &lt;- list(
+  #test1 = c(2.1, 3.8, 4.2),
+  #test2 = c(1, 10, 100, 1000),
+  #test3 = c(0, 1, 4),
+  #test4 = c(0.38,  0.94, -1.56),
+  #test5 = c(TRUE, TRUE),
+  #test6 = c(&quot;6&quot;, &#39;7&#39;, &quot;8&quot;)
+#)
 
 
-# Create for loop to test gmean() on the above examples</code></pre>
+# Create for loop to test gmean() on the above examples
+#for(i in test_data){
+  #print(gmean(i))
+#}</code></pre>
 </div>
 <div id="exercise-6" class="section level2">
 <h2>Exercise 6</h2>
 <pre class="r"><code># Copy gmean() from Ex4 and edit it to check the input
-
+gmean &lt;- function(x){
+  if( any(x &lt;= 0) ){
+  warning(&quot;&lt;ERROR MESSAGE&gt;&quot;)
+  return(NaN)}
+  sum_lnx &lt;- sum(log(x))
+  x_g &lt;- exp(sum_lnx/length(x))
+  return(x_g)
+}
 
 
 

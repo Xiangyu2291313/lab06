@@ -28,10 +28,26 @@ diamonds <- diamonds %>% rename(
 
 ```{r}
 # Do some preliminary investigations & cleaning
+diamonds %>%
+  filter(depth_pct == 0) %>%
+  count()
+
+diamonds %>%
+  filter(length_mm == 0) %>%
+  count()
+
+diamonds %>%
+  filter(width_mm == 0) %>%
+  count()
 
 
+diamonds %>%
+  filter(depth_mm == 0) %>%
+  count()
 
-
+diamonds %>%
+  filter(table_pct == 0) %>%
+  count()
 ```
 
 
@@ -43,6 +59,9 @@ diamonds <- diamonds %>%
   mutate(table_mm = table_pct * width_mm / 100)
 
 # Overall table_mm arithmetic mean?
+mean_table_mm <- diamonds %>%
+  summarise(mean(table_mm)) %>%
+  print()
 
 
 
@@ -50,7 +69,10 @@ diamonds <- diamonds %>%
 
 
 # table_mm arithmetic mean within each clarity category
-
+mean_ec_table_mm <- diamonds %>%
+  group_by(clarity) %>%
+  summarise(mean(table_mm)) %>%
+  print()
 
 
 
@@ -58,7 +80,7 @@ diamonds <- diamonds %>%
 
 ```
 
-_Add your comment here_
+_For each clarity with numbered 2, the average table length tends to be higher._
 
 ## Exercise 3
 
@@ -69,7 +91,11 @@ _Do derivation on paper, unless you know how to write LaTeX code_
 
 ```{r}
 # Write gmean() command
-
+gmean <- function(x){
+  sum_lnx <- sum(log(x))
+  x_g <- exp(sum_lnx/length(x))
+  return(x_g)
+}
 
 
 ```
@@ -78,18 +104,20 @@ _Do derivation on paper, unless you know how to write LaTeX code_
 
 ```{r, error = TRUE}
 
-test_data <- list(
-  test1 = c(2.1, 3.8, 4.2),
-  test2 = c(1, 10, 100, 1000),
-  test3 = c(0, 1, 4),
-  test4 = c(0.38,  0.94, -1.56),
-  test5 = c(TRUE, TRUE),
-  test6 = c("6", "7", "8")
-)
+#test_data <- list(
+  #test1 = c(2.1, 3.8, 4.2),
+  #test2 = c(1, 10, 100, 1000),
+  #test3 = c(0, 1, 4),
+  #test4 = c(0.38,  0.94, -1.56),
+  #test5 = c(TRUE, TRUE),
+  #test6 = c("6", '7', "8")
+#)
 
 
 # Create for loop to test gmean() on the above examples
-
+#for(i in test_data){
+  #print(gmean(i))
+#}
 
 ```
 
@@ -98,13 +126,19 @@ test_data <- list(
 
 ```{r}
 # Copy gmean() from Ex4 and edit it to check the input
-
+gmean <- function(x){
+  if( any(x <= 0) ){
+  warning("<ERROR MESSAGE>")
+  return(NaN)}
+  sum_lnx <- sum(log(x))
+  x_g <- exp(sum_lnx/length(x))
+  return(x_g)
+}
 
 
 
 
 # Copy your code from Ex 5 to test your new command
-
 
 
 
